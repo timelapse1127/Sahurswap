@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SahurSwap</title>
-  <link rel="icon" href="logo.png">
-  <style>
-    body { font-family: sans-serif; background-color: #1e1e2f; color: #fff; text-align: center; padding: 2rem; }
-    .card { background: #29294d; padding: 2rem; border-radius: 1rem; display: inline-block; width: 90%; max-width: 400px; }
-    input, button { margin-top: 1rem; padding: 10px; width: 80%; border-radius: 8px; border: none; }
-    button { background: #ff9800; color: #000; font-weight: bold; cursor: pointer; }
-    img { width: 120px; margin-bottom: 1rem; border-radius: 50%; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 </head>
 <body>
-  <img src="logo.png" alt="Logo SahurSwap">
-  <h1>SahurSwap DEX</h1>
-  <div class="card">
-    <div id="wallet-address">Wallet not connected</div>
-    <button onclick="connectWallet()">Connect Wallet</button>
-    <h3>Swap MON to SAHUR</h3>
-    <input type="number" id="swapAmount" placeholder="Amount in MON" />
-    <button onclick="swap()">Swap</button>
+  <div class="container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Emoji_u1f311.svg/1024px-Emoji_u1f311.svg.png" alt="Logo" />
+    <h1>SahurSwap</h1>
+
+    <h3>Add Liquidity</h3>
+    <input id="sahurAmount" placeholder="Amount SAHUR to add" />
+    <input id="monAmount" placeholder="Amount MON to add (native)" />
+    <button onclick="addLiquidity()">Add Liquidity</button>
+
+    <h3>Swap MON → SAHUR</h3>
+    <input id="swapMonAmount" placeholder="Amount MON to swap" />
+    <button onclick="swapMonForSahur()">Swap</button>
+
+    <h3>Swap SAHUR → MON</h3>
+    <input id="swapSahurAmount" placeholder="Amount SAHUR to swap" />
+    <button onclick="swapSahurForMon()">Swap</button>
+
+    <div class="pool-info" id="poolInfo">Loading pool info...</div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
   <script src="app.js"></script>
 </body>
 </html>
