@@ -1,4 +1,3 @@
-
 /* style.css */
 body {
   margin: 0;
@@ -22,7 +21,7 @@ nav {
 nav button {
   padding: 10px 20px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   background-color: #ff9800;
   color: #000;
   font-weight: bold;
@@ -37,57 +36,108 @@ nav button:hover {
 .container {
   max-width: 480px;
   width: 90%;
-  background-color: #29294d;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  padding: 20px;
+  padding: 10px;
 }
 
-h1 {
-  text-align: center;
+.branding {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-input, button {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-button {
-  background-color: #ff9800;
-  color: #000;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #e68900;
+img {
+  width: 60px;
+  border-radius: 50%;
+  background-color: white;
+  padding: 5px;
 }
 
 .page.hidden {
   display: none;
 }
 
-.pool-info {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #1e1e2f;
-  border-radius: 5px;
+.card {
+  background-color: #29294d;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  margin-top: 0;
   text-align: center;
 }
 
-img {
+.swap-box {
+  display: flex;
+  align-items: center;
+  background-color: #1e1e2f;
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #444;
+}
+
+.swap-box input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 1.2rem;
+  outline: none;
+}
+
+.swap-box.readonly input {
+  color: #ccc;
+}
+
+.token-label {
+  font-weight: bold;
+  margin-left: 10px;
+  color: #ccc;
+}
+
+label {
+  font-size: 0.9rem;
+  margin-bottom: 4px;
   display: block;
-  margin: 0 auto 10px;
-  width: 80px;
-  border-radius: 50%;
-  background-color: white;
-  padding: 5px;
+  color: #aaa;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  background-color: #ff9800;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #e68900;
+}
+
+.reverse-link {
+  text-align: center;
+  color: #88f;
+  cursor: pointer;
+  margin-top: -10px;
+  font-size: 0.9rem;
+}
+
+.pool-info {
+  background-color: #29294d;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 20px;
 }
 
 .toast {
@@ -100,24 +150,9 @@ img {
   padding: 12px 24px;
   border-radius: 8px;
   opacity: 0.95;
+  z-index: 999;
 }
 
 .hidden {
   display: none;
-}
-
-.branding {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.estimate {
-  text-align: right;
-  font-size: 0.9rem;
-  margin-top: -5px;
-  margin-bottom: 10px;
-  color: #ccc;
 }

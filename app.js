@@ -86,6 +86,7 @@ async function swapMonForSahur() {
 
     showToast("✅ Swap successful!");
     document.getElementById("swapMonAmount").value = "";
+    document.getElementById("swapEstimate").value = "≈ 0 SAHUR";
     updatePoolInfo();
   } catch (err) {
     console.error(err);
@@ -136,7 +137,7 @@ async function updateEstimate() {
   const input = document.getElementById("swapMonAmount").value;
   const estBox = document.getElementById("swapEstimate");
   if (!input || isNaN(input)) {
-    estBox.innerText = "≈ 0 SAHUR";
+    estBox.value = "≈ 0 SAHUR";
     return;
   }
 
@@ -145,15 +146,15 @@ async function updateEstimate() {
     const [monRes, sahurRes] = await dexContract.getReserves();
 
     if (monRes.eq(0) || sahurRes.eq(0)) {
-      estBox.innerText = "Pool kosong";
+      estBox.value = "Pool kosong";
       return;
     }
 
     const estimatedSahur = monInput.mul(sahurRes).div(monRes);
-    estBox.innerText = "≈ " + ethers.utils.formatEther(estimatedSahur) + " SAHUR";
+    estBox.value = "≈ " + ethers.utils.formatEther(estimatedSahur) + " SAHUR";
   } catch (err) {
     console.error(err);
-    estBox.innerText = "≈ 0 SAHUR";
+    estBox.value = "≈ 0 SAHUR";
   }
 }
 

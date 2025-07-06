@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,17 +20,51 @@
       <h1>SahurSwap</h1>
     </div>
 
+    <!-- SWAP PAGE UNISWAP STYLE -->
     <div id="swapPage" class="page">
-      <h3>Swap MON → SAHUR</h3>
-      <input id="swapMonAmount" placeholder="Amount MON to swap" oninput="updateEstimate()" />
-      <div id="swapEstimate" class="estimate">≈ 0 SAHUR</div>
-      <button onclick="swapMonForSahur()">Swap</button>
+      <div class="card">
+        <h2>Swap</h2>
+        <label for="swapMonAmount">From</label>
+        <div class="swap-box">
+          <input id="swapMonAmount" placeholder="0.0" oninput="updateEstimate()" />
+          <span class="token-label">MON</span>
+        </div>
 
-      <h3>Swap SAHUR → MON</h3>
-      <input id="swapSahurAmount" placeholder="Amount SAHUR to swap" />
-      <button onclick="swapSahurForMon()">Swap</button>
+        <label for="swapEstimate">To (Estimated)</label>
+        <div class="swap-box readonly">
+          <input id="swapEstimate" value="≈ 0 SAHUR" readonly />
+          <span class="token-label">SAHUR</span>
+        </div>
+
+        <button onclick="swapMonForSahur()">Swap</button>
+      </div>
+
+      <p class="reverse-link" onclick="showPage('reverse')">Swap SAHUR → MON?</p>
     </div>
 
+    <!-- REVERSE SWAP PAGE -->
+    <div id="reversePage" class="page hidden">
+      <div class="card">
+        <h2>Swap</h2>
+        <label for="swapSahurAmount">From</label>
+        <div class="swap-box">
+          <input id="swapSahurAmount" placeholder="0.0" />
+          <span class="token-label">SAHUR</span>
+        </div>
+
+        <label>To</label>
+        <div class="swap-box readonly">
+          <input value="Receive MON" readonly />
+          <span class="token-label">MON</span>
+        </div>
+
+        <button onclick="swapSahurForMon()">Swap</button>
+      </div>
+
+      <p class="reverse-link" onclick="showPage('swap')">Swap MON → SAHUR?</p>
+    </div>
+
+    <!-- LIQUIDITY PAGE -->
     <div id="liquidityPage" class="page hidden">
       <h3>Add Liquidity</h3>
       <input id="sahurAmount" placeholder="Amount SAHUR to add" />
@@ -39,6 +72,7 @@
       <button onclick="addLiquidity()">Add Liquidity</button>
     </div>
 
+    <!-- POOL INFO PAGE -->
     <div id="infoPage" class="page hidden">
       <div class="pool-info" id="poolInfo">Loading pool info...</div>
     </div>
