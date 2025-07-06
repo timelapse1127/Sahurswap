@@ -175,3 +175,65 @@ label {
     align-items: flex-start;
   }
 }
+/* MOBILE OPTIMIZATION */
+@media screen and (max-width: 480px) {
+  body {
+    font-size: 14px;
+    padding: 0 10px;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-area {
+    justify-content: center;
+  }
+
+  .top-right {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .top-right button,
+  #menu button {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .swap-box input,
+  input[type="number"] {
+    font-size: 1rem;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .toast {
+    bottom: 60px;
+    font-size: 0.9rem;
+    padding: 10px 16px;
+  }
+
+  .price-info {
+    font-size: 0.8rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .reverse-link {
+    font-size: 0.8rem;
+  }
+}
