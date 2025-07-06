@@ -237,3 +237,17 @@ label {
     font-size: 0.8rem;
   }
 }
+.logo {
+  width: 40px;
+  height: 40px;
+}
+
+.top-right {
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+}
+
+.toast {
+  bottom: 80px; /* naik sedikit dari bawah */
+}
