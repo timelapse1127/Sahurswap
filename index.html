@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,25 +9,42 @@
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 </head>
 <body>
+  <nav>
+    <button onclick="showPage('swap')">Swap</button>
+    <button onclick="showPage('liquidity')">Add Liquidity</button>
+    <button onclick="showPage('info')">Pool Info</button>
+  </nav>
+
   <div class="container">
-    <img src="logo.png" alt="Logo" />
-    <h1>SahurSwap</h1>
+    <div class="branding">
+      <img src="logo.png" alt="Logo" />
+      <h1>SahurSwap</h1>
+    </div>
 
-    <h3>Add Liquidity</h3>
-    <input id="sahurAmount" placeholder="Amount SAHUR to add" />
-    <input id="monAmount" placeholder="Amount MON to add" />
-    <button onclick="addLiquidity()">Add Liquidity</button>
+    <div id="swapPage" class="page">
+      <h3>Swap MON → SAHUR</h3>
+      <input id="swapMonAmount" placeholder="Amount MON to swap" oninput="updateEstimate()" />
+      <div id="swapEstimate" class="estimate">≈ 0 SAHUR</div>
+      <button onclick="swapMonForSahur()">Swap</button>
 
-    <h3>Swap MON → SAHUR</h3>
-    <input id="swapMonAmount" placeholder="Amount MON to swap" />
-    <button onclick="swapMonForSahur()">Swap</button>
+      <h3>Swap SAHUR → MON</h3>
+      <input id="swapSahurAmount" placeholder="Amount SAHUR to swap" />
+      <button onclick="swapSahurForMon()">Swap</button>
+    </div>
 
-    <h3>Swap SAHUR → MON</h3>
-    <input id="swapSahurAmount" placeholder="Amount SAHUR to swap" />
-    <button onclick="swapSahurForMon()">Swap</button>
+    <div id="liquidityPage" class="page hidden">
+      <h3>Add Liquidity</h3>
+      <input id="sahurAmount" placeholder="Amount SAHUR to add" />
+      <input id="monAmount" placeholder="Amount MON to add" />
+      <button onclick="addLiquidity()">Add Liquidity</button>
+    </div>
 
-    <div class="pool-info" id="poolInfo">Loading pool info...</div>
+    <div id="infoPage" class="page hidden">
+      <div class="pool-info" id="poolInfo">Loading pool info...</div>
+    </div>
   </div>
+
+  <div id="toast" class="toast hidden"></div>
 
   <script src="app.js"></script>
 </body>
