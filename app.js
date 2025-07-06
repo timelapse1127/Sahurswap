@@ -16,9 +16,18 @@ const dexABI = [
 
 let provider, signer, sahurToken, dexContract;
 
+document.getElementById("menuToggle").onclick = () => {
+  const menu = document.getElementById("menu");
+  menu.classList.toggle("hidden");
+};
+
+document.getElementById("connectWalletBtn").onclick = async () => {
+  await connect();
+};
+
 async function connect() {
   if (!window.ethereum) {
-    showToast("Please install MetaMask or compatible wallet");
+    showToast("Please install MetaMask");
     return;
   }
   provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -26,6 +35,9 @@ async function connect() {
   signer = provider.getSigner();
   sahurToken = new ethers.Contract(sahurTokenAddress, sahurABI, signer);
   dexContract = new ethers.Contract(dexContractAddress, dexABI, signer);
+
+  const address = await signer.getAddress();
+  document.getElementById("connectWalletBtn").innerText = address.slice(0, 6) + "..." + address.slice(-4);
   updatePoolInfo();
 }
 
@@ -45,7 +57,7 @@ async function addLiquidity() {
   const sahurAmount = document.getElementById("sahurAmount").value;
   const monAmount = document.getElementById("monAmount").value;
   if (!sahurAmount || !monAmount) {
-    showToast("Please enter both SAHUR and MON amounts");
+    showToast("Enter both SAHUR and MON amounts");
     return;
   }
 
@@ -53,70 +65,59 @@ async function addLiquidity() {
   const monParsed = ethers.utils.parseEther(monAmount);
 
   try {
-    showToast("⏳ Approving token...");
-    const approveTx = await sahurToken.approve(dexContractAddress, sahurParsed);
-    await approveTx.wait();
-
-    showToast("⏳ Adding liquidity...");
+    setButtonLoading("liquidityBtn", true);
+    await sahurToken.approve(dexContractAddress, sahurParsed);
     const tx = await dexContract.addLiquidity(sahurParsed, { value: monParsed });
     await tx.wait();
-
     showToast("✅ Liquidity added!");
-    document.getElementById("sahurAmount").value = "";
-    document.getElementById("monAmount").value = "";
     updatePoolInfo();
   } catch (err) {
-    console.error(err);
-    showToast("❌ Transaction failed or rejected");
+    showToast("❌ Tx failed");
+  } finally {
+    setButtonLoading("liquidityBtn", false);
   }
 }
 
 async function swapMonForSahur() {
   const amount = document.getElementById("swapMonAmount").value;
   if (!amount || isNaN(amount)) {
-    showToast("❌ Enter a valid MON amount");
+    showToast("Enter a valid MON amount");
     return;
   }
-  const parsed = ethers.utils.parseEther(amount);
 
   try {
-    showToast("⏳ Waiting for transaction...");
+    setButtonLoading("swapBtn", true);
+    const parsed = ethers.utils.parseEther(amount);
     const tx = await dexContract.swapMONForSAHUR({ value: parsed });
     await tx.wait();
-
     showToast("✅ Swap successful!");
-    document.getElementById("swapMonAmount").value = "";
-    document.getElementById("swapEstimate").value = "≈ 0 SAHUR";
     updatePoolInfo();
   } catch (err) {
-    console.error(err);
-    showToast("❌ Transaction failed or rejected");
+    showToast("❌ Tx failed");
+  } finally {
+    setButtonLoading("swapBtn", false);
   }
 }
 
 async function swapSahurForMon() {
   const amount = document.getElementById("swapSahurAmount").value;
   if (!amount || isNaN(amount)) {
-    showToast("❌ Enter a valid SAHUR amount");
+    showToast("Enter a valid SAHUR amount");
     return;
   }
-  const parsed = ethers.utils.parseEther(amount);
 
   try {
-    showToast("⏳ Approving token...");
-    const approveTx = await sahurToken.approve(dexContractAddress, parsed);
-    await approveTx.wait();
-
-    showToast("⏳ Swapping...");
+    setButtonLoading("reverseSwapBtn", true);
+    const parsed = ethers.utils.parseEther(amount);
+    await sahurToken.approve(dexContractAddress, parsed);
     const tx = await dexContract.swapSAHURForMON(parsed);
     await tx.wait();
-
     showToast("✅ Swap successful!");
-    document.getElementById("swapSahurAmount").value = "";
     updatePoolInfo();
   } catch (err) {
-    console.error(err);
-    showToast("❌ Transaction failed or rejected");
+    showToast("❌ Tx failed");
+  } finally {
+    setButtonLoading("reverseSwapBtn", false);
   }
 }
 
@@ -125,11 +126,19 @@ async function updatePoolInfo() {
     const [mon, sahur] = await dexContract.getReserves();
     const monFormatted = ethers.utils.formatEther(mon);
     const sahurFormatted = ethers.utils.formatEther(sahur);
-    document.getElementById("poolInfo").innerText =
-      `Pool: ${monFormatted} MON / ${sahurFormatted} SAHUR`;
+    document.getElementById("poolInfo").innerText = `Pool: ${monFormatted} MON / ${sahurFormatted} SAHUR`;
+
+    const p1 = document.getElementById("priceInfo1");
+    const p2 = document.getElementById("priceInfo2");
+
+    const one = ethers.utils.parseEther("1");
+    const rate1 = sahur.mul(one).div(mon);
+    const rate2 = mon.mul(one).div(sahur);
+
+    p1.innerText = `1 MON ≈ ${ethers.utils.formatEther(rate1)} SAHUR`;
+    p2.innerText = `1 SAHUR ≈ ${ethers.utils.formatEther(rate2)} MON`;
   } catch (err) {
     console.error(err);
-    document.getElementById("poolInfo").innerText = "Error loading pool info";
   }
 }
 
@@ -144,18 +153,35 @@ async function updateEstimate() {
   try {
     const monInput = ethers.utils.parseEther(input);
     const [monRes, sahurRes] = await dexContract.getReserves();
-
-    if (monRes.eq(0) || sahurRes.eq(0)) {
-      estBox.value = "Pool kosong";
-      return;
-    }
-
     const estimatedSahur = monInput.mul(sahurRes).div(monRes);
     estBox.value = "≈ " + ethers.utils.formatEther(estimatedSahur) + " SAHUR";
-  } catch (err) {
-    console.error(err);
+  } catch {
     estBox.value = "≈ 0 SAHUR";
   }
+}
+
+async function updateReverseEstimate() {
+  const input = document.getElementById("swapSahurAmount").value;
+  const estBox = document.getElementById("reverseEstimate");
+  if (!input || isNaN(input)) {
+    estBox.value = "≈ 0 MON";
+    return;
+  }
+
+  try {
+    const sahurInput = ethers.utils.parseEther(input);
+    const [monRes, sahurRes] = await dexContract.getReserves();
+    const estimatedMon = sahurInput.mul(monRes).div(sahurRes);
+    estBox.value = "≈ " + ethers.utils.formatEther(estimatedMon) + " MON";
+  } catch {
+    estBox.value = "≈ 0 MON";
+  }
+}
+
+function setButtonLoading(id, isLoading) {
+  const btn = document.getElementById(id);
+  btn.disabled = isLoading;
+  btn.innerText = isLoading ? "Processing..." : btn.dataset.label || btn.innerText;
 }
 
 connect();

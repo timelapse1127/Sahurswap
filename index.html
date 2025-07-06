@@ -8,25 +8,31 @@
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 </head>
 <body>
-  <nav>
+  <header class="top-bar">
+    <div class="logo-area">
+      <img src="logo.png" alt="Logo" class="logo" />
+      <h1>SahurSwap</h1>
+    </div>
+    <div class="top-right">
+      <button id="menuToggle">☰</button>
+      <button id="connectWalletBtn">Connect Wallet</button>
+    </div>
+  </header>
+
+  <nav id="menu" class="hidden">
     <button onclick="showPage('swap')">Swap</button>
     <button onclick="showPage('liquidity')">Add Liquidity</button>
     <button onclick="showPage('info')">Pool Info</button>
   </nav>
 
   <div class="container">
-    <div class="branding">
-      <img src="logo.png" alt="Logo" />
-      <h1>SahurSwap</h1>
-    </div>
-
-    <!-- SWAP PAGE UNISWAP STYLE -->
+    <!-- SWAP PAGE -->
     <div id="swapPage" class="page">
       <div class="card">
         <h2>Swap</h2>
         <label for="swapMonAmount">From</label>
         <div class="swap-box">
-          <input id="swapMonAmount" placeholder="0.0" oninput="updateEstimate()" />
+          <input id="swapMonAmount" type="number" min="0" placeholder="0.0" oninput="updateEstimate()" />
           <span class="token-label">MON</span>
         </div>
 
@@ -36,7 +42,8 @@
           <span class="token-label">SAHUR</span>
         </div>
 
-        <button onclick="swapMonForSahur()">Swap</button>
+        <button id="swapBtn" onclick="swapMonForSahur()">Swap</button>
+        <div class="price-info" id="priceInfo1"></div>
       </div>
 
       <p class="reverse-link" onclick="showPage('reverse')">Swap SAHUR → MON?</p>
@@ -48,17 +55,18 @@
         <h2>Swap</h2>
         <label for="swapSahurAmount">From</label>
         <div class="swap-box">
-          <input id="swapSahurAmount" placeholder="0.0" />
+          <input id="swapSahurAmount" type="number" min="0" placeholder="0.0" oninput="updateReverseEstimate()" />
           <span class="token-label">SAHUR</span>
         </div>
 
-        <label>To</label>
+        <label for="reverseEstimate">To (Estimated)</label>
         <div class="swap-box readonly">
-          <input value="Receive MON" readonly />
+          <input id="reverseEstimate" value="≈ 0 MON" readonly />
           <span class="token-label">MON</span>
         </div>
 
-        <button onclick="swapSahurForMon()">Swap</button>
+        <button id="reverseSwapBtn" onclick="swapSahurForMon()">Swap</button>
+        <div class="price-info" id="priceInfo2"></div>
       </div>
 
       <p class="reverse-link" onclick="showPage('swap')">Swap MON → SAHUR?</p>
@@ -66,20 +74,23 @@
 
     <!-- LIQUIDITY PAGE -->
     <div id="liquidityPage" class="page hidden">
-      <h3>Add Liquidity</h3>
-      <input id="sahurAmount" placeholder="Amount SAHUR to add" />
-      <input id="monAmount" placeholder="Amount MON to add" />
-      <button onclick="addLiquidity()">Add Liquidity</button>
+      <div class="card">
+        <h2>Add Liquidity</h2>
+        <label for="sahurAmount">SAHUR Amount</label>
+        <input id="sahurAmount" type="number" min="0" placeholder="e.g. 10" />
+        <label for="monAmount">MON Amount</label>
+        <input id="monAmount" type="number" min="0" placeholder="e.g. 0.5" />
+        <button id="liquidityBtn" onclick="addLiquidity()">Add Liquidity</button>
+      </div>
     </div>
 
     <!-- POOL INFO PAGE -->
     <div id="infoPage" class="page hidden">
-      <div class="pool-info" id="poolInfo">Loading pool info...</div>
+      <div class="card pool-info" id="poolInfo">Loading pool info...</div>
     </div>
   </div>
 
   <div id="toast" class="toast hidden"></div>
-
   <script src="app.js"></script>
 </body>
 </html>
